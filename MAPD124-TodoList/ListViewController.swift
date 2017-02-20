@@ -14,7 +14,7 @@ import FirebaseDatabase
 private let cellId = "cellId"
 class ListViewController: UITableViewController {
 
-    let datas = ["one","two","three"]
+    let ref = FIRDatabase.database().reference().child("User")
     
     var items = [Item]()
     
@@ -34,10 +34,14 @@ class ListViewController: UITableViewController {
     }
 
     func observeItems() {
-        let ref = FIRDatabase.database().reference().child("User")
         
+        itemAdded()
+        itemRemoved()
+    }
+    
+    func itemAdded(){
         ref.observe(.childAdded, with: { (snapshot) in
-
+            
             if let dictionary = snapshot.value as? [String:AnyObject] {
                 let item = Item()
                 item.id = snapshot.key
@@ -50,16 +54,25 @@ class ListViewController: UITableViewController {
                 }
             }
             
-//            let item = Item(title: snapshot.value(forKey: "title") as String, detail: snapshot.value(forKey: "detail") as String, dueDate: snapshot.value(forKey: "dueDate") as String, remindDate: snapshot.value(forKey: "remindDate") as String)
-//                Item(title: snapshot.value["title"] as String, detail: snapshot["detail"] as String, dueDate: snapshot["dueDate"] as String, remindDate: snapshot["remindDate"] as String)
-    
-            
-            
         }, withCancel: nil)
+    }
+    
+    func itemRemoved(){
+       ref.observe(.childRemoved, with: { (snapshot) in
+        let key = snapshot.key
+        for (index, value) in self.items.enumerated(){
+            if value.id == key {
+                self.items.remove(at: index)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
         
         
         
         
+       }, withCancel: nil)
     }
     
     func handleLogout() {
@@ -75,6 +88,7 @@ class ListViewController: UITableViewController {
         navigationController?.pushViewController(newItemViewController, animated: true)
     }
 
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
@@ -84,14 +98,23 @@ class ListViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ListCell
         
         cell.textLabel?.text = items[indexPath.row].title
-        cell.detailTextLabel?.text = items[indexPath.row].dueDate
+        
+        if let dateText = items[indexPath.row].dueDate {
+            let date = Helper.getInstance.formatFromDBValueToDate(string: dateText)
+            cell.detailTextLabel?.text = date
+        }
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            print("delete clicked")
+            
+            if let id = items[indexPath.row].id {
+                ref.child(id).removeValue()
+            }
+            items.remove(at: indexPath.row)
+            tableView.reloadData()
         }
     }
     
@@ -101,30 +124,6 @@ class ListViewController: UITableViewController {
     }
 
 
-   //for customize row buttons
-//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]?{
-////        let done = UITableViewRowAction(style: .destructive, title: "Done") { (action, index) in
-////            print("done button clicked")
-////        }
-////        done.backgroundColor = .green
-////        
-////        let edit = UITableViewRowAction(style: .default, title: "Edit") { (action, index) in
-////            print("edit button clicked")
-////        }
-////        edit.backgroundColor = .orange
-//        
-////        let deleteButton = MyTableViewRowAction(style: .default, title: "      ") { (action, index) in
-////            
-////            
-////        }
-////        deleteButton.image = #imageLiteral(resourceName: "delete")
-////        deleteButton.backgroundColor = UIColor(red: 252/255, green: 65/255, blue: 75/255, alpha: 1)
-////        
-////        deleteButton.imageView?.contentMode = .scaleAspectFit
-////        return [deleteButton]
-//        
-//    }
-    
     
 }
 

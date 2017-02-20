@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3E0AA9C81E5B4BE700B75F65 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0AA9C71E5B4BE700B75F65 /* CustomAlertViewController.swift */; };
+		3E0AA9CA1E5B727400B75F65 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0AA9C91E5B727400B75F65 /* Helper.swift */; };
 		3E1D765E1E5A080600BB560C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1D765D1E5A080600BB560C /* Extensions.swift */; };
 		3E1D76601E5A1D1500BB560C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E1D765F1E5A1D1500BB560C /* GoogleService-Info.plist */; };
 		3E1D76621E5A1F8700BB560C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1D76611E5A1F8700BB560C /* Item.swift */; };
@@ -28,6 +29,7 @@
 		130FC884FF2E9B2E2F017D1D /* Pods_MAPD124_TodoList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MAPD124_TodoList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A4F81A04BC4E19BB039A78 /* Pods-MAPD124-TodoList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MAPD124-TodoList.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MAPD124-TodoList/Pods-MAPD124-TodoList.debug.xcconfig"; sourceTree = "<group>"; };
 		3E0AA9C71E5B4BE700B75F65 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
+		3E0AA9C91E5B727400B75F65 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		3E1D765D1E5A080600BB560C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3E1D765F1E5A1D1500BB560C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3E1D76611E5A1F8700BB560C /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 			children = (
 				3E5641581E4F6497002A5912 /* CheckBox.swift */,
 				3E1D765D1E5A080600BB560C /* Extensions.swift */,
+				3E0AA9C91E5B727400B75F65 /* Helper.swift */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E0AA9CA1E5B727400B75F65 /* Helper.swift in Sources */,
 				3E1D76621E5A1F8700BB560C /* Item.swift in Sources */,
 				3E1D76641E5A9CB600BB560C /* NewItemViewController.swift in Sources */,
 				3E1D76681E5AA98D00BB560C /* DatePickerContainer.swift in Sources */,
