@@ -71,7 +71,7 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
     lazy var dueDateLabel: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.text = "Tue, February 11, 2020"
+//        lbl.text = "Tue, February 11, 2020"
         lbl.addGestureRecognizer(self.dueDateLabelGesture!)
         lbl.isUserInteractionEnabled = true
         return lbl
@@ -89,7 +89,7 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.addGestureRecognizer(self.remindMeLabelGesture!)
-        lbl.text = "Wed, February 12, 2020"
+//        lbl.text = "Wed, February 12, 2020"
         lbl.isUserInteractionEnabled = true
         return lbl
     }()

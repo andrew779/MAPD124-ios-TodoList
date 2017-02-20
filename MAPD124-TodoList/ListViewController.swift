@@ -16,6 +16,8 @@ class ListViewController: UITableViewController {
 
     let datas = ["one","two","three"]
     
+    var items = [Item]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,19 +29,34 @@ class ListViewController: UITableViewController {
         
         tableView.register(ListCell.self, forCellReuseIdentifier: cellId)
         
-//        observeItems()
+        observeItems()
         
     }
 
     func observeItems() {
         let ref = FIRDatabase.database().reference().child("User")
         
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.observe(.childAdded, with: { (snapshot) in
+
+            if let dictionary = snapshot.value as? [String:AnyObject] {
+                let item = Item()
+                item.id = snapshot.key
+                item.setValuesForKeys(dictionary)
+                
+                self.items.append(item)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
             
-            
+//            let item = Item(title: snapshot.value(forKey: "title") as String, detail: snapshot.value(forKey: "detail") as String, dueDate: snapshot.value(forKey: "dueDate") as String, remindDate: snapshot.value(forKey: "remindDate") as String)
+//                Item(title: snapshot.value["title"] as String, detail: snapshot["detail"] as String, dueDate: snapshot["dueDate"] as String, remindDate: snapshot["remindDate"] as String)
+    
             
             
         }, withCancel: nil)
+        
         
         
         
@@ -59,15 +76,15 @@ class ListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datas.count
+        return items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ListCell
         
-        cell.textLabel?.text = datas[indexPath.row]
-        cell.detailTextLabel?.text = datas[indexPath.row]
+        cell.textLabel?.text = items[indexPath.row].title
+        cell.detailTextLabel?.text = items[indexPath.row].dueDate
 
         return cell
     }

@@ -21,3 +21,9 @@ class MyTableViewRowAction: UITableViewRowAction {
         }
     }
 }
+
+extension DateFormatter {
+    func myFormatStyle() -> String {
+        return "EEE, MMM d, yyyy hh:mm a"
+    }
+}
