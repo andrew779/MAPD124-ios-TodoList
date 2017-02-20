@@ -12,7 +12,11 @@ import Firebase
 class NewItemViewController: UIViewController {
     let ref = FIRDatabase.database().reference().child("User")
 
-    var item:Item?
+    var item:Item? {
+        didSet {
+            loadItemInfo()
+        }
+    }
     
     let newItemForm:NewItemForm = {
         let v = NewItemForm()
@@ -20,6 +24,17 @@ class NewItemViewController: UIViewController {
         return v
     }()
     
+    private func loadItemInfo(){
+        newItemForm.titleTextField.text = item?.title
+        newItemForm.detailTextView.text = item?.detail
+        if let dueDate = item?.dueDate {
+            newItemForm.dueDateLabel.text = Helper.getInstance.formatFromDBValueToDate(string: dueDate)
+        }
+        if let remindDate = item?.remindDate, !remindDate.isEmpty {
+            newItemForm.remindMeLabel.text = Helper.getInstance.formatFromDBValueToDate(string: remindDate)
+        }
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

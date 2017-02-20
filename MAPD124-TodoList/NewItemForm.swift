@@ -224,17 +224,13 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     // MARK: Formatting date on datePicker and put it on the right dateLabel
     func handleDoneTouched(){
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE, MMM d, yyyy hh:mm a"
-        let finalDateValue = formatter.string(from: datePickerContainer.datePicker.date)
+        
+        let finalDateValue = Helper.getInstance.formatFromDate(date: datePickerContainer.datePicker.date)
         
         if let label = tapGesture?.view as? UILabel{
             label.text = finalDateValue
             toggleDatePicker(tapGesture!)
         }
-        
-        
-        
         
     }
     

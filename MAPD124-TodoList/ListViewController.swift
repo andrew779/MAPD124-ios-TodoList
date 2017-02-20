@@ -68,10 +68,6 @@ class ListViewController: UITableViewController {
                 }
             }
         }
-        
-        
-        
-        
        }, withCancel: nil)
     }
     
@@ -123,7 +119,13 @@ class ListViewController: UITableViewController {
         return true
     }
 
-
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let newItemController = NewItemViewController()
+        newItemController.item = items[indexPath.row]
+        navigationController?.pushViewController(newItemController, animated: true)
+        
+    }
     
 }
 
