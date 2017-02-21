@@ -108,27 +108,6 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
         return v
     }()
     
-    var datePickerContainerConstrain: NSLayoutConstraint?
-    
-    var condition:Bool = true
-    
-    func toggleDatePicker(_ sender: AnyObject){
-        
-        tapGesture = sender as? UITapGestureRecognizer
-        
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
-            
-            self.datePickerContainerConstrain?.constant = self.condition ? -10 : 250
-            self.layoutIfNeeded()
-            
-        }) { (ok) in
-            self.condition = !self.condition
-        }
-
-    }
-    
-
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -138,8 +117,8 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
         self.backgroundColor = .white
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        dueDateLabelGesture = UITapGestureRecognizer(target: self, action: #selector(toggleDatePicker(_:)))
-        remindMeLabelGesture = UITapGestureRecognizer(target: self, action: #selector(toggleDatePicker(_:)))
+        dueDateLabelGesture = UITapGestureRecognizer(target: self, action: #selector(dateLabelTapped(_:)))
+        remindMeLabelGesture = UITapGestureRecognizer(target: self, action: #selector(dateLabelTapped(_:)))
         
         addSubview(titleTextField)
         addSubview(detailTextView)
@@ -235,7 +214,29 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
         datePickerContainer.heightAnchor.constraint(equalToConstant: 200).isActive = true
         
         datePickerContainer.doneButton.addTarget(self, action: #selector(handleDoneTouched), for: .touchUpInside)
+        datePickerContainer.cancelButton.addTarget(self, action: #selector(toggleDatePicker), for: .touchUpInside)
+    }
+    
+    var datePickerContainerConstrain: NSLayoutConstraint?
+    
+    var condition:Bool = true
+    
+    func dateLabelTapped(_ sender: AnyObject){
         
+        tapGesture = sender as? UITapGestureRecognizer
+        toggleDatePicker()
+        
+    }
+    
+    func toggleDatePicker(){
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            
+            self.datePickerContainerConstrain?.constant = self.condition ? -10 : 250
+            self.layoutIfNeeded()
+            
+        }) { (ok) in
+            self.condition = !self.condition
+        }
     }
     
     var tapGesture:UITapGestureRecognizer?
@@ -247,7 +248,7 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
         
         if let label = tapGesture?.view as? UILabel{
             label.text = finalDateValue
-            toggleDatePicker(tapGesture!)
+            toggleDatePicker()
         }
         
     }
@@ -264,7 +265,9 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
     }
     // MARK: hide keyboard when touch other space
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if !condition {
+            toggleDatePicker()
+        }
         self.titleTextField.endEditing(true)
         self.detailTextView.endEditing(true)
         

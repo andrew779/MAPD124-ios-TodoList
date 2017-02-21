@@ -22,20 +22,19 @@ class DatePickerContainer: UIView {
         let doneButton = UIButton(type: .system)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.setTitle("Done", for: .normal)
-        
-        //        button.addTarget(self, action: #selector(printSomething), for: .touchUpInside)
         return doneButton
+    }()
+    
+    let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Cancel", for: .normal)
+        return button
     }()
     
     let doneButtonContainer:UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        //        let shadowPath = UIBezierPath(rect: v.bounds)
-        //        v.layer.shadowColor = UIColor.black.cgColor
-        //        v.clipsToBounds = true
-        //        v.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-        //        v.layer.shadowOpacity = 0.5
-        //        v.layer.shadowPath = shadowPath.cgPath
         v.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 0.6)
         
         return v
@@ -50,13 +49,19 @@ class DatePickerContainer: UIView {
         self.addSubview(doneButtonContainer)
         
         doneButtonContainer.addSubview(doneButton)
-        
+        doneButtonContainer.addSubview(cancelButton)
         //x,y,w,h
         doneButton.topAnchor.constraint(equalTo: doneButtonContainer.topAnchor).isActive = true
         doneButton.rightAnchor.constraint(equalTo: doneButtonContainer.rightAnchor).isActive = true
         doneButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         doneButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-   
+        
+        //x,y,w,h
+        cancelButton.topAnchor.constraint(equalTo: doneButtonContainer.topAnchor).isActive = true
+        cancelButton.leftAnchor.constraint(equalTo: doneButtonContainer.leftAnchor).isActive = true
+        cancelButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        cancelButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
         //x,y,w,h
         doneButtonContainer.topAnchor.constraint(equalTo: topAnchor).isActive = true
         doneButtonContainer.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
