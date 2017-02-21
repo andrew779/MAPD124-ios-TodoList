@@ -34,25 +34,19 @@ class ListViewController: UITableViewController {
     }
 
     func observeItems() {
-        
-        itemAdded()
-        itemRemoved()
-        itemChanged()
+//        itemAdded()
+//        itemRemoved()
+//        itemChanged()
+        queryItemOrder()
     }
     
     func itemAdded(){
         ref.observe(.childAdded, with: { (snapshot) in
             
-            if let dictionary = snapshot.value as? [String:AnyObject] {
-                let item = Item()
-                item.id = snapshot.key
-                item.setValuesForKeys(dictionary)
-                
-                self.items.append(item)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            let item = Item(snapshot: snapshot)
+            self.items.append(item)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
             
         }, withCancel: nil)
@@ -87,6 +81,23 @@ class ListViewController: UITableViewController {
             }
         }, withCancel: nil)
     }
+    
+    func queryItemOrder(){
+        ref.queryOrdered(byChild: "complete").observe(.value, with: { (snapshot) in
+            var newItems:[Item] = []
+            
+            for child in snapshot.children {
+                let newItem = Item(snapshot: child as! FIRDataSnapshot)
+                newItems.append(newItem)
+            }
+            self.items = newItems
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        }, withCancel: nil)
+    }
+    
     
     
     func handleLogout() {

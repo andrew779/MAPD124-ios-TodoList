@@ -18,10 +18,8 @@ class CustomAlertViewController: UIAlertController {
     }
 
     func myOKAlert(title:String, message:String) {
-        
         self.title = title
         self.message = message
-        
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
         self.addAction(ok)
     }

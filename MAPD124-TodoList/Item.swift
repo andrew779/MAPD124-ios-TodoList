@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import FirebaseDatabase
 
 class Item: NSObject {
     var id: String?
@@ -28,6 +28,23 @@ class Item: NSObject {
         self.detail = detail
         self.dueDate = dueDate
         self.remindDate = remindDate
+    }
+    
+    init(snapshot: FIRDataSnapshot){
+        id = snapshot.key
+        let snapshotValue = snapshot.value as! [String: AnyObject]
+        title = snapshotValue["title"] as? String
+        detail = snapshotValue["detail"] as? String
+        dueDate = snapshotValue["dueDate"] as? String
+        remindDate = snapshotValue["remindDate"] as? String
+        complete = snapshotValue["complete"] as! Bool
+    }
+    
+    init(dic: Dictionary<String, String> ){
+        title = dic["title"]
+        detail = dic["detail"]
+        dueDate = dic["dueDate"]
+        remindDate = dic["remindDate"]
     }
     
     func getDicValues() -> Dictionary<String, AnyObject> {

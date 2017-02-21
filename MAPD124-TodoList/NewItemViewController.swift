@@ -47,33 +47,43 @@ class NewItemViewController: UIViewController {
     }
     
     func handleSaveBarButtonTouched(){
-        if item != nil {
+        guard let dictionary = getFormValueIntoDictionary() else {return}
+        if item != nil{
+            item?.title = dictionary["title"]
+            item?.detail = dictionary["detail"]
+            item?.dueDate = dictionary["dueDate"]
+            item?.remindDate = dictionary["remindDate"]
+        } else {
+            item = Item(dic: dictionary)
+        }
+        updateFirbase(item: item!)
+    }
+    
+    func getFormValueIntoDictionary() -> Dictionary<String,String>?{
+        var dictionary = [String:String]()
+        if let title = newItemForm.titleTextField.text, let dueDateText = newItemForm.dueDateLabel.text {
+            if title.isEmpty {
+                callAlert(title: "Invalid input", message: "Title can't be empty")
+            }
+            let detail = newItemForm.detailTextView.text ?? "Add Notes"
+            let dueDate = convertStringToDateValue(string: dueDateText)
+            var remindDate = ""
+            if let remindDateText = newItemForm.remindMeLabel.text {
+                remindDate = convertStringToDateValue(string: remindDateText)
+            }
+            
+            dictionary = ["title":title,"detail":detail,"dueDate":dueDate,"remindDate":remindDate]
+            return dictionary
             
         } else {
-            if let title = newItemForm.titleTextField.text, let dueDateText = newItemForm.dueDateLabel.text {
-                if title.isEmpty {
-                    callAlert(title: "Invalid input", message: "Title can't be empty")
-                    return
-                }
-                let detail = newItemForm.detailTextView.text ?? "Add Notes"
-                let dueDate = convertStringToDateValue(string: dueDateText)
-                var remindDate = ""
-                if let remindDateText = newItemForm.remindMeLabel.text {
-                    remindDate = convertStringToDateValue(string: remindDateText)
-                }
-                
-                item = Item(title: title, detail: detail, dueDate: dueDate, remindDate: remindDate)
-                updateFirbase(item: item!)
-                
-            } else {
-                callAlert(title: "Invalid input", message: "Due date can't be empty")
-            }
-
+            callAlert(title: "Invalid input", message: "Due date can't be empty")
         }
+        return nil
     }
     
     func updateFirbase(item:Item){
         var itemRef: FIRDatabaseReference?
+        print(item.id!)
         if let id = item.id {
             itemRef = ref.child(id)
         } else {
@@ -81,7 +91,10 @@ class NewItemViewController: UIViewController {
         }
         let values = item.getDicValues()
         itemRef?.updateChildValues(values, withCompletionBlock: { (error, ref) in
-            self.callAlert(title: "Updated", message: "Successfully updated")
+            //uncomment this will pop a alert whenever successfully update a new item
+//            self.callAlert(title: "Updated", message: "Successfully updated")
+           _ = self.navigationController?.popToRootViewController(animated: true)
+            
         })
     }
     
@@ -103,7 +116,7 @@ class NewItemViewController: UIViewController {
     
     func setupNewItemForm(){
         view.addSubview(newItemForm)
-        
+        //x,y,w,h
         newItemForm.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
         newItemForm.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         newItemForm.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
