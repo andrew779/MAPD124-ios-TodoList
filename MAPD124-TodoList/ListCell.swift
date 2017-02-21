@@ -10,6 +10,8 @@ import UIKit
 
 class ListCell: UITableViewCell {
     
+    var tapAction:((ListCell) -> Void)?
+    
     let mSwitch: UISwitch = {
         let sw = UISwitch()
         sw.translatesAutoresizingMaskIntoConstraints = false
@@ -26,13 +28,17 @@ class ListCell: UITableViewCell {
     }()
     
     func handleCheckBoxClicked (_ sender:UIButton){
-        let cb = sender as! CheckBox
-        if cb.isChecked {
-            cb.isChecked = false
-        } else {
-            cb.isChecked = true
-        }
-        
+//        let cb = sender as! CheckBox
+//        if cb.isChecked {
+//            self.textLabel?.textColor = .black
+//            self.detailTextLabel?.textColor = .black
+//            cb.isChecked = false
+//        } else {
+//            self.textLabel?.textColor = .gray
+//            self.detailTextLabel?.textColor = .gray
+//            cb.isChecked = true
+//        }
+        tapAction?(self)
         
     }
     
@@ -47,7 +53,6 @@ class ListCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
-        //        addSubview(mSwitch)
         addSubview(checkBox)
         
         //need x,y,w,h anchors

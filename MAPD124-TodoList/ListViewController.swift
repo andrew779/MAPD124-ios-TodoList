@@ -37,6 +37,7 @@ class ListViewController: UITableViewController {
         
         itemAdded()
         itemRemoved()
+        itemChanged()
     }
     
     func itemAdded(){
@@ -71,6 +72,23 @@ class ListViewController: UITableViewController {
        }, withCancel: nil)
     }
     
+    func itemChanged(){
+        ref.observe(.childChanged, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String:AnyObject] {
+                let id = snapshot.key
+                for value in self.items{
+                    if value.id == id {
+                        value.setValuesForKeys(dictionary)
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }, withCancel: nil)
+    }
+    
+    
     func handleLogout() {
         
         dismiss(animated: true, completion: nil)
@@ -78,12 +96,39 @@ class ListViewController: UITableViewController {
     }
     
     func handleAddNewItem() {
-
+        
         let newItemViewController = NewItemViewController()
         
         navigationController?.pushViewController(newItemViewController, animated: true)
     }
+    
+    func toggleCell(_ cell: ListCell, isCompleted: Bool) {
+        cell.checkBox.isChecked = isCompleted
+        if isCompleted {
+            cell.textLabel?.font = UIFont.italicSystemFont(ofSize: (cell.textLabel?.font.pointSize)!)
+            cell.textLabel?.textColor = UIColor.gray
+            cell.detailTextLabel?.textColor = UIColor.gray
+        } else {
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: (cell.textLabel?.font.pointSize)!)
+            cell.textLabel?.textColor = UIColor.black
+            cell.detailTextLabel?.textColor = UIColor.black
+        }
 
+    }
+    func checkBoxTaped(_ cell:ListCell){
+        guard let indexPath = tableView.indexPath(for: cell) else{return}
+        cell.checkBox.isChecked = !cell.checkBox.isChecked
+        let isComplete = cell.checkBox.isChecked
+        items[indexPath.row].complete = isComplete   //update local items value
+        toggleCell(cell, isCompleted: isComplete)
+        
+        //update Firebase
+        if let id = items[indexPath.row].id {
+             ref.child(id).updateChildValues(["complete":isComplete])
+        }
+       
+        
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
@@ -92,6 +137,12 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ListCell
+        
+        toggleCell(cell, isCompleted: items[indexPath.row].complete)
+        
+        cell.tapAction = { (cell) in
+            self.checkBoxTaped(cell)
+        }
         
         cell.textLabel?.text = items[indexPath.row].title
         
