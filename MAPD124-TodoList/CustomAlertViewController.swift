@@ -23,13 +23,5 @@ class CustomAlertViewController: UIAlertController {
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
         self.addAction(ok)
     }
-    
-    func aboutMeAlert(){
-        self.title = "About Me"
-        self.message = "Student: Wenzhong Zheng\nStudentID: 300909195"
-        
-        let ok = UIAlertAction(title: "Got It", style: .default, handler: nil)
-        self.addAction(ok)
-    }
 
 }

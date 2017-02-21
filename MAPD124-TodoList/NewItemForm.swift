@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
+class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     let titleTextField: UITextField = {
         let tf = UITextField()
@@ -101,6 +101,13 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
         return v
     }()
     
+    let separaterBetweenDates:UIView = {
+        let v = UIView()
+        v.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
     var datePickerContainerConstrain: NSLayoutConstraint?
     
     var condition:Bool = true
@@ -120,9 +127,13 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
 
     }
     
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        self.titleTextField.delegate = self
+        self.detailTextView.delegate = self
         
         self.backgroundColor = .white
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -180,6 +191,7 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
         //second section
         addSubview(dueDateIconView)
         addSubview(dueDateLabel)
+        addSubview(separaterBetweenDates)
         addSubview(remindMeIconView)
         addSubview(remindMeLabel)
         
@@ -194,6 +206,12 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
         dueDateLabel.leftAnchor.constraint(equalTo: dueDateIconView.rightAnchor, constant: 16).isActive = true
         dueDateLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         dueDateLabel.bottomAnchor.constraint(equalTo: dueDateIconView.bottomAnchor).isActive = true
+        
+        //x,y,w,h
+        separaterBetweenDates.topAnchor.constraint(equalTo: dueDateLabel.bottomAnchor, constant: 6).isActive = true
+        separaterBetweenDates.leftAnchor.constraint(equalTo: detailTextView.leftAnchor).isActive = true
+        separaterBetweenDates.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        separaterBetweenDates.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         //x,y,w,h
         remindMeIconView.topAnchor.constraint(equalTo: dueDateIconView.bottomAnchor, constant: 12).isActive = true
@@ -239,6 +257,20 @@ class NewItemForm: UIView, UITextViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
+    // MARK: hide textfield keyboard when hit return
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    // MARK: hide keyboard when touch other space
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.titleTextField.endEditing(true)
+        self.detailTextView.endEditing(true)
+        
+    }
+    
+    // MARK: make a custom place holder on textview as it doesn't have this property
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == .lightGray {
             textView.text = nil
