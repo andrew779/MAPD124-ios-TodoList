@@ -2,10 +2,11 @@
 //  ListViewController.swift
 //  MAPD124-TodoList
 //
-//  Created by Wenzhong Zheng on 2017-02-01.
-//  SID:300909195
+//  Created by Wenzhong Zheng
+//  SID: 300909195
 //  Copyright © 2017 Wenzhong. All rights reserved.
 //
+
 
 import UIKit
 import FirebaseDatabase
@@ -29,7 +30,7 @@ class ListViewController: UITableViewController {
         
         tableView.register(ListCell.self, forCellReuseIdentifier: cellId)
         
-        observeItems()
+        queryItemOrder()
         
     }
     
@@ -40,55 +41,8 @@ class ListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    func observeItems() {
-//        itemAdded()
-//        itemRemoved()
-//        itemChanged()
-        queryItemOrder()
-    }
-    
-    func itemAdded(){
-        ref.observe(.childAdded, with: { (snapshot) in
-            
-            let item = Item(snapshot: snapshot)
-            self.items.append(item)
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            
-        }, withCancel: nil)
-    }
-    
-    func itemRemoved(){
-       ref.observe(.childRemoved, with: { (snapshot) in
-        let key = snapshot.key
-        for (index, value) in self.items.enumerated(){
-            if value.id == key {
-                self.items.remove(at: index)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
-        }
-       }, withCancel: nil)
-    }
-    
-    func itemChanged(){
-        ref.observe(.childChanged, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String:AnyObject] {
-                let id = snapshot.key
-                for value in self.items{
-                    if value.id == id {
-                        value.setValuesForKeys(dictionary)
-                    }
-                }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
-        }, withCancel: nil)
-    }
-    
+
+    // MARK: observe item value changes and update
     func queryItemOrder(){
         ref.queryOrdered(byChild: "complete").observe(.value, with: { (snapshot) in
             var newItems:[Item] = []
@@ -105,15 +59,25 @@ class ListViewController: UITableViewController {
         }, withCancel: nil)
     }
     
-    
-    
- 
-    
     func handleAddNewItem() {
         
         let newItemViewController = NewItemViewController()
         
         navigationController?.pushViewController(newItemViewController, animated: true)
+    }
+    
+    // MARK: change cell item style when checkbox value changed
+    func checkBoxTaped(_ cell:ListCell){
+        guard let indexPath = tableView.indexPath(for: cell) else{return}
+        cell.checkBox.isChecked = !cell.checkBox.isChecked
+        let isComplete = cell.checkBox.isChecked
+        items[indexPath.row].complete = isComplete   //update local items value
+        toggleCell(cell, isCompleted: isComplete)
+        
+        //update Firebase
+        if let id = items[indexPath.row].id {
+            ref.child(id).updateChildValues(["complete":isComplete])
+        }
     }
     
     func toggleCell(_ cell: ListCell, isCompleted: Bool) {
@@ -128,20 +92,6 @@ class ListViewController: UITableViewController {
             cell.detailTextLabel?.textColor = UIColor.black
         }
 
-    }
-    func checkBoxTaped(_ cell:ListCell){
-        guard let indexPath = tableView.indexPath(for: cell) else{return}
-        cell.checkBox.isChecked = !cell.checkBox.isChecked
-        let isComplete = cell.checkBox.isChecked
-        items[indexPath.row].complete = isComplete   //update local items value
-        toggleCell(cell, isCompleted: isComplete)
-        
-        //update Firebase
-        if let id = items[indexPath.row].id {
-             ref.child(id).updateChildValues(["complete":isComplete])
-        }
-       
-        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

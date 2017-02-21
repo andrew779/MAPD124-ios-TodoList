@@ -2,9 +2,11 @@
 //  NewItemViewController.swift
 //  MAPD124-TodoList
 //
-//  Created by Wenzhong Zheng on 2017-02-19.
+//  Created by Wenzhong Zheng
+//  SID: 300909195
 //  Copyright © 2017 Wenzhong. All rights reserved.
 //
+
 
 import UIKit
 import Firebase
@@ -24,6 +26,7 @@ class NewItemViewController: UIViewController {
         return v
     }()
     
+    // MARK: preload detail info when item object has been set
     private func loadItemInfo(){
         newItemForm.titleTextField.text = item?.title
         newItemForm.detailTextView.text = item?.detail
@@ -46,6 +49,7 @@ class NewItemViewController: UIViewController {
         
     }
     
+    // MARK: collecting data when save button touched and update DB
     func handleSaveBarButtonTouched(){
         guard let dictionary = getFormValueIntoDictionary() else {return}
         if item != nil{

@@ -2,12 +2,15 @@
 //  Helper.swift
 //  MAPD124-TodoList
 //
-//  Created by Wenzhong Zheng on 2017-02-20.
+//  Created by Wenzhong Zheng
+//  SID: 300909195
 //  Copyright © 2017 Wenzhong. All rights reserved.
 //
 
+
 import UIKit
 
+// MARK: value formatting struct with self explained function name
 struct Helper {
     let formatter = DateFormatter()
     

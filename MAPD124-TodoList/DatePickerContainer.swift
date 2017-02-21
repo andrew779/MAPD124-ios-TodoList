@@ -2,9 +2,11 @@
 //  DatePickerContainer.swift
 //  MAPD124-TodoList
 //
-//  Created by Wenzhong Zheng on 2017-02-19.
+//  Created by Wenzhong Zheng
+//  SID: 300909195
 //  Copyright © 2017 Wenzhong. All rights reserved.
 //
+
 
 import UIKit
 

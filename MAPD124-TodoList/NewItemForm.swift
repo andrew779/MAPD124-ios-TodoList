@@ -2,7 +2,8 @@
 //  NewItemForms.swift
 //  MAPD124-TodoList
 //
-//  Created by Wenzhong Zheng on 2017-02-19.
+//  Created by Wenzhong Zheng
+//  SID: 300909195
 //  Copyright © 2017 Wenzhong. All rights reserved.
 //
 
@@ -71,7 +72,6 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
     lazy var dueDateLabel: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-//        lbl.text = "Tue, February 11, 2020"
         lbl.addGestureRecognizer(self.dueDateLabelGesture!)
         lbl.isUserInteractionEnabled = true
         return lbl
@@ -89,7 +89,6 @@ class NewItemForm: UIView, UITextFieldDelegate, UITextViewDelegate, UIGestureRec
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.addGestureRecognizer(self.remindMeLabelGesture!)
-//        lbl.text = "Wed, February 12, 2020"
         lbl.isUserInteractionEnabled = true
         return lbl
     }()
