@@ -23,7 +23,7 @@ class ListViewController: UITableViewController {
         
         navigationItem.title = "Inbox"
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "About Me", style: .plain, target: self, action: #selector(handleAboutMeTaped))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "new_list_icon"), style: .plain, target: self, action: #selector(handleAddNewItem))
         
@@ -31,6 +31,13 @@ class ListViewController: UITableViewController {
         
         observeItems()
         
+    }
+    
+    // MARK: pop up a alert with about me info
+    func handleAboutMeTaped() {
+        let alert = UIAlertController(title: "About Me", message: "Student: Wenzhong Zheng\nStudentID: 300909195", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Got It", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     func observeItems() {
@@ -100,11 +107,7 @@ class ListViewController: UITableViewController {
     
     
     
-    func handleLogout() {
-        
-        dismiss(animated: true, completion: nil)
-    
-    }
+ 
     
     func handleAddNewItem() {
         
@@ -168,11 +171,18 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
-            if let id = items[indexPath.row].id {
-                ref.child(id).removeValue()
-            }
-            items.remove(at: indexPath.row)
-            tableView.reloadData()
+            let alert = UIAlertController(title: "Delete", message: "Do you really want to delete it ?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Pretty sure", style: .destructive, handler: { (action) in
+                if let id = self.items[indexPath.row].id {
+                    self.ref.child(id).removeValue()
+                }
+                self.items.remove(at: indexPath.row)
+                self.tableView.reloadData()
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+            
         }
     }
     
